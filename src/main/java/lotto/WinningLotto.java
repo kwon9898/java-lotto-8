@@ -10,12 +10,9 @@ public class WinningLotto {
 		this.bonusNumber = bonusNumber;
 	}
 
-	    private void validate(Lotto winningTicket, int bonusNumber) {
-	        if (winningTicket.getNumbers().contains(bonusNumber)) {
-	            throw new IllegalArgumentException("[ERROR] 보너스 번호는 당첨 번호와 중복될 수 없습니다.");
-	        }
-	    }
-	
+	        private void validate(Lotto winningTicket, int bonusNumber) {
+	            LottoValidator.validateBonusNumber(winningTicket, bonusNumber);
+	        }	
 	    public Rank match(Lotto userLotto) {
 	        long matchCount = userLotto.getNumbers().stream()
 	                .filter(winningTicket.getNumbers()::contains)

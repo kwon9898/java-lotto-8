@@ -29,9 +29,7 @@ public class Application {
             try {
                 String input = InputLotto.readPurchaseAmount();
                 int amount = Integer.parseInt(input);
-                if (amount % 1000 != 0) {
-                    throw new IllegalArgumentException("[ERROR] 구입 금액은 1,000원 단위로 입력해야 합니다.");
-                }
+                LottoValidator.validatePurchaseAmount(amount);
                 return amount;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
@@ -72,9 +70,7 @@ public class Application {
             try {
                 String input = InputLotto.readBonusNumber();
                 int bonusNumber = Integer.parseInt(input);
-                if (winningTicket.getNumbers().contains(bonusNumber)) {
-                    throw new IllegalArgumentException("[ERROR] 보너스 번호는 당첨 번호와 중복될 수 없습니다.");
-                }
+                LottoValidator.validateBonusNumber(winningTicket, bonusNumber);
                 return bonusNumber;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
