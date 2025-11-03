@@ -9,32 +9,35 @@ import java.util.stream.Collectors;
 public class LottoGame {
 
     public void run() {
-        try {
-            int purchaseAmount = getPurchaseAmount();
-            LottoGenerator lottoGenerator = new LottoGenerator();
-            List<Lotto> userLottos = lottoGenerator.purchase(purchaseAmount);
-            printPurchasedLottos(userLottos);
+        int purchaseAmount = getPurchaseAmount();
+        LottoGenerator lottoGenerator = new LottoGenerator();
+        List<Lotto> userLottos = lottoGenerator.purchase(purchaseAmount);
+        printPurchasedLottos(userLottos);
 
-            WinningLotto winningLotto = getWinningLotto();
+        WinningLotto winningLotto = getWinningLotto();
 
-            LottoResult lottoResult = new LottoResult(userLottos, winningLotto);
-            printResult(lottoResult);
-
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
-        }
+        LottoResult lottoResult = new LottoResult(userLottos, winningLotto);
+        printResult(lottoResult);
     }
 
     private int getPurchaseAmount() {
         while (true) {
             try {
                 String input = InputLotto.readPurchaseAmount();
-                int amount = Integer.parseInt(input);
+                int amount = parseAmount(input);
                 LottoValidator.validatePurchaseAmount(amount);
                 return amount;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
+        }
+    }
+
+    private int parseAmount(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("[ERROR] 구입 금액은 숫자여야 합니다.");
         }
     }
 
@@ -55,14 +58,21 @@ public class LottoGame {
         while (true) {
             try {
                 String input = InputLotto.readWinningNumbers();
-                List<Integer> numbers = Arrays.stream(input.split(","))
-                        .map(String::trim)
-                        .map(Integer::parseInt)
-                        .collect(Collectors.toList());
-                return new Lotto(numbers);
+                return new Lotto(parseNumbers(input));
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
+        }
+    }
+
+    private List<Integer> parseNumbers(String input) {
+        try {
+            return Arrays.stream(input.split(","))
+                    .map(String::trim)
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toList());
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("[ERROR] 당첨 번호는 숫자여야 합니다.");
         }
     }
 
@@ -70,12 +80,20 @@ public class LottoGame {
         while (true) {
             try {
                 String input = InputLotto.readBonusNumber();
-                int bonusNumber = Integer.parseInt(input);
+                int bonusNumber = parseBonusNumber(input);
                 LottoValidator.validateBonusNumber(winningTicket, bonusNumber);
                 return bonusNumber;
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
+        }
+    }
+
+    private int parseBonusNumber(String input) {
+        try {
+            return Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("[ERROR] 보너스 번호는 숫자여야 합니다.");
         }
     }
 
